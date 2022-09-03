@@ -62,6 +62,18 @@ data class UserSignUpInput(
     var email: String? = null,
     var password: String? = null,
 )
+data class MedicineInput(
+    var id: Long? = null,
+    var name: String? = null,
+    var dose: Int? = null,
+    var quantity: Int? = null
+)
+data class MedicineDetails(
+    var id: Long? = null,
+    var name: String? = null,
+    var dose: Int? = null,
+    var quantity: Int? = null
+)
 
 
 

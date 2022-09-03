@@ -68,3 +68,22 @@ interface UserMapper {
         userSignUpInput: UserSignUpInput
     ): User
 }
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+interface MedicineMapper{
+    fun medicineToMedicineDetails(
+        medicine: Medicine
+    ): MedicineDetails
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun medicineInputToMedicine(dto: MedicineInput, @MappingTarget medicine: Medicine )
+
+    fun medicineListToMedicineListDetails(
+        medicineList: List<Medicine>,
+    ): List<MedicineDetails>
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun medicineInputToMedicine(
+        medicineInput: MedicineInput,
+    ): Medicine
+
+}

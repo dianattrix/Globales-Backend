@@ -116,3 +116,39 @@ class UserController(private val userService: UserService) {
         userService.deleteById(id)
     }
 }
+
+//      USER
+@RestController
+@RequestMapping("\${url.medicines}")
+class MedicinesController(private val medicineService: medicineService) {
+
+    @GetMapping
+    @ResponseBody
+    fun findAll() = medicineService.findAll()
+
+    @Throws(NoSuchElementException::class)
+    @GetMapping("{id}")
+    @ResponseBody
+    fun findById(@PathVariable id: Long) = medicineService.findById(id)
+
+
+    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseBody
+    fun create(@RequestBody medicineInput: MedicineInput): MedicineDetails? {
+        return medicineService.create(medicineInput)
+    }
+
+    @Throws(NoSuchElementException::class)
+    @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseBody
+    fun update(@RequestBody medicineInput: MedicineInput): MedicineDetails? {
+        return medicineService.update(medicineInput)
+    }
+
+    @Throws(NoSuchElementException::class)
+    @DeleteMapping("{id}")
+    @ResponseBody
+    fun deleteById(@PathVariable id: Long) {
+        medicineService.deleteById(id)
+    }
+}

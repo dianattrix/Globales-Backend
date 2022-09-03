@@ -350,3 +350,114 @@ class AbstractUserService(
     }
 
 }
+
+interface medicineService {
+    /**
+     * Find all user
+     * @return a list of users
+     */
+    fun findAll(): List<MedicineDetails>?
+
+    /**
+     * Get one user by id
+     * @param id of the user
+     * @return the user found
+     */
+    fun findById(id: Long): MedicineDetails?
+
+    /**
+     * Get one user by id
+     * @param email of the user
+     * @return the user found
+     */
+
+    fun create(medicineInput: MedicineInput): MedicineDetails?
+
+    /**
+     * Update a user entity in the database
+     * @param userInput the dto input for user
+     * @return the new user created
+     */
+    fun update(medicineInput: MedicineInput): MedicineDetails?
+
+    /**
+     * Delete a user by id from Database
+     * @param id of the user
+     */
+    fun deleteById(id: Long)
+}
+
+
+@Service
+class AbstractMedicineService(
+    @Autowired
+    val medicineRepository: MedicineRepository,
+    @Autowired
+    val medicineMapper: MedicineMapper,
+) : medicineService {
+    /**
+     * Find all medicines
+     * @return a list of medicines
+     */
+    override fun findAll(): List<MedicineDetails>? {
+        return medicineMapper.medicineListToMedicineListDetails(
+            medicineRepository.findAll()
+        )
+    }
+
+    /**
+     * Get one medicine by id
+     * @param id of the medicine
+     * @return the medicine found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findById(id: Long): MedicineDetails? {
+        val medicine : Medicine  = medicineRepository.findById(id).orElse(null)
+            ?: throw java.util.NoSuchElementException(String.format("The medicine with the id: %s not found!", id))
+        return medicineMapper.medicineToMedicineDetails(medicine)
+    }
+
+
+    /**
+     * Save and flush a medicine entity in the database
+     * @param medicineInput
+     * @return the medicine created
+     */
+    override fun create(medicineInput: MedicineInput): MedicineDetails? {
+        val medicine:Medicine = medicineMapper.medicineInputToMedicine(medicineInput)
+        return medicineMapper.medicineToMedicineDetails(
+            medicineRepository.save(medicine)
+        )
+    }
+
+    /**
+     * Update a user entity in the database
+     * @param medicineInput the dto input for user
+     * @return the new medicine created
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun update(medicineInput: MedicineInput):MedicineDetails? {
+        val medicine:Medicine  = medicineRepository.findById(medicineInput.id!!).orElse(null)
+            ?: throw java.util.NoSuchElementException(
+                String.format(
+                    "The medicine with the id: %s not found!",
+                    medicineInput.id
+                )
+            )
+        val medicineUpdate: Medicine = medicine
+        medicineMapper.medicineInputToMedicine(medicineInput, medicineUpdate)
+        return medicineMapper.medicineToMedicineDetails(medicineRepository.save(medicineUpdate))
+    }
+
+    /**
+     * Delete a medicine by id from Database
+     * @param id of the medicine
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun deleteById(id: Long) {
+        medicineRepository.findById(id).orElse(null)
+            ?: throw java.util.NoSuchElementException(String.format("The medicine with the id: %s not found!", id))
+        medicineRepository.deleteById(id)
+    }
+
+}
