@@ -461,3 +461,114 @@ class AbstractMedicineService(
     }
 
 }
+
+interface reminderService {
+    /**
+     * Find all reminders
+     * @return a list of reminders
+     */
+    fun findAll(): List<ReminderDetails>?
+
+    /**
+     * Get one reminder by id
+     * @param id of the reminder
+     * @return the user found
+     */
+    fun findById(id: Long): ReminderDetails?
+
+    /**
+     * Get one reminder by id
+     * @param email of the reminder
+     * @return the reminder found
+     */
+
+    fun create(reminderInput: ReminderInput): ReminderDetails?
+
+    /**
+     * Update a reminder entity in the database
+     * @param reminderInput the dto input for reminder
+     * @return the new reminder created
+     */
+    fun update(reminderInput: ReminderInput): ReminderDetails?
+
+    /**
+     * Delete a reminder by id from Database
+     * @param id of the reminder
+     */
+    fun deleteById(id: Long)
+}
+
+
+@Service
+class AbstractReminderService(
+        @Autowired
+        val reminderRepository: ReminderRepository,
+        @Autowired
+        val reminderMapper: ReminderMapper,
+) : reminderService {
+    /**
+     * Find all reminders
+     * @return a list of reminders
+     */
+    override fun findAll(): List<ReminderDetails>? {
+        return reminderMapper.reminderListToReminderListDetails(
+                reminderRepository.findAll()
+        )
+    }
+
+    /**
+     * Get one reminder by id
+     * @param id of the reminder
+     * @return the reminder found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findById(id: Long): ReminderDetails? {
+        val reminder : Reminder  = reminderRepository.findById(id).orElse(null)
+                ?: throw java.util.NoSuchElementException(String.format("The reminder with the id: %s not found!", id))
+        return reminderMapper.reminderToReminderDetails(reminder)
+    }
+
+
+    /**
+     * Save and flush a reminder entity in the database
+     * @param reminderInput
+     * @return the reminder created
+     */
+    override fun create(reminderInput: ReminderInput): ReminderDetails? {
+        val reminder:Reminder = reminderMapper.reminderInputToReminder(reminderInput)
+        return reminderMapper.reminderToReminderDetails(
+                reminderRepository.save(reminder)
+        )
+    }
+
+    /**
+     * Update a reminder entity in the database
+     * @param reminderInput the dto input for reminder
+     * @return the new reminder created
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun update(reminderInput: ReminderInput):ReminderDetails? {
+        val reminder:Reminder  = reminderRepository.findById(reminderInput.id!!).orElse(null)
+                ?: throw java.util.NoSuchElementException(
+                        String.format(
+                                "The reminder with the id: %s not found!",
+                                reminderInput.id
+                        )
+                )
+        val reminderUpdate: Reminder = reminder
+        reminderMapper.reminderInputToReminder(reminderInput, reminderUpdate)
+        return reminderMapper.reminderToReminderDetails(reminderRepository.save(reminderUpdate))
+    }
+
+    /**
+     * Delete a reminder by id from Database
+     * @param id of the reminder
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun deleteById(id: Long) {
+        reminderRepository.findById(id).orElse(null)
+                ?: throw java.util.NoSuchElementException(String.format("The reminder with the id: %s not found!", id))
+        reminderRepository.deleteById(id)
+    }
+
+}

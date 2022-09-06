@@ -152,3 +152,40 @@ class MedicinesController(private val medicineService: medicineService) {
         medicineService.deleteById(id)
     }
 }
+
+
+//      REMINDER
+@RestController
+@RequestMapping("\${url.reminders}")
+    class RemindersController(private val reminderService: reminderService) {
+
+    @GetMapping
+    @ResponseBody
+    fun findAll() = reminderService.findAll()
+
+    @Throws(NoSuchElementException::class)
+    @GetMapping("{id}")
+    @ResponseBody
+    fun findById(@PathVariable id: Long) = reminderService.findById(id)
+
+
+    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseBody
+    fun create(@RequestBody reminderInput: ReminderInput): ReminderDetails? {
+        return reminderService.create(reminderInput)
+    }
+
+    @Throws(NoSuchElementException::class)
+    @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseBody
+    fun update(@RequestBody reminderInput: ReminderInput): ReminderDetails? {
+        return reminderService.update(reminderInput)
+    }
+
+    @Throws(NoSuchElementException::class)
+    @DeleteMapping("{id}")
+    @ResponseBody
+    fun deleteById(@PathVariable id: Long) {
+        reminderService.deleteById(id)
+    }
+}

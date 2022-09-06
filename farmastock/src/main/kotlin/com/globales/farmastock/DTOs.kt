@@ -75,6 +75,16 @@ data class MedicineDetails(
     var quantity: Int? = null
 )
 
+data class ReminderInput(
+        var id: Long? = null,
+        var create_date: Date? = null, // Date(year: Int, month: Int, day: Int, hour: Int, minute: Int)
+        var description: String? = null,
+        var status: Boolean? = null
+)
+data class ReminderDetails(
+        var create_date: Date? = null, // Date(year: Int, month: Int, day: Int, hour: Int, minute: Int)
+        var description: String? = null,
+)
 
 
 

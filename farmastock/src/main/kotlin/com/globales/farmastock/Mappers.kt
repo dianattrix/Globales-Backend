@@ -87,3 +87,22 @@ interface MedicineMapper{
     ): Medicine
 
 }
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+interface ReminderMapper{
+    fun reminderToReminderDetails(
+            reminder: Reminder
+    ): ReminderDetails
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun reminderInputToReminder(dto: ReminderInput, @MappingTarget reminder: Reminder )
+
+    fun reminderListToReminderListDetails(
+            reminderList: List<Reminder>,
+    ): List<ReminderDetails>
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun reminderInputToReminder(
+            reminderInput: ReminderInput,
+    ): Reminder
+
+}
