@@ -26,8 +26,6 @@ data class RoleInput(
 )
 
 //      USER
-
-// TODO: 1/9/2022 Falta agregar la relacion one to many de reminder en user
 data class UserInput(
     var id: Long? = null,
     var firstName: String? = null,
@@ -37,11 +35,6 @@ data class UserInput(
     var enabled: Boolean? = null,
     var roleList: List<RoleDetails>? = null,
     var createDate: Date?=null,
-)
-
-data class UserLoginInput(
-    var username: String = "",
-    var password: String = "",
 )
 
 data class UserResult(
@@ -54,14 +47,20 @@ data class UserResult(
     var tokenExpired: Boolean? = null,
     var createDate: Date? = null,
     var roleList: List<RoleDetails>?=null,
+    var reminderList: List<ReminderDetails>?=null,
 )
 
+data class UserLoginInput(
+    var username: String = "",
+    var password: String = "",
+)
 data class UserSignUpInput(
     var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null,
     var password: String? = null,
 )
+
 data class MedicineInput(
     var id: Long? = null,
     var name: String? = null,

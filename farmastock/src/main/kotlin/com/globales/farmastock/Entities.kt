@@ -29,7 +29,6 @@ data class User(
     @OneToMany(mappedBy = "user")
     var reminderList: Set<Reminder>?= null
 
-
     ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
